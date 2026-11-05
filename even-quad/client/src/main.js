@@ -26,9 +26,16 @@ function render() {
     </header>
     ${renderTopbar()}
     <p class="instructions">
-      <strong>How to play:</strong> click four cards to select a Quad.
-      <strong>Right-click</strong> a card (or press and hold on a touchscreen) to flip it over
-      and meet the mathematician on the back. Click a flipped card to enlarge the poster.
+      <span class="for-mouse">
+        <strong>How to play:</strong> click four cards to select a Quad.
+        <strong>Right-click</strong> a card to flip it over and meet the mathematician
+        on the back. Click a flipped card to enlarge the poster.
+      </span>
+      <span class="for-touch">
+        <strong>How to play:</strong> tap four cards to select a Quad.
+        <strong>Press and hold</strong> a card to flip it and meet the mathematician.
+        Tap a flipped card to enlarge the poster.
+      </span>
     </p>
     ${renderScoreboard()}
     ${renderGameOver()}
