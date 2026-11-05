@@ -390,3 +390,19 @@ h1 {
     display: inline;
   }
 }
+
+/* Stop iOS/Android from showing their own image preview, "Save image"
+   menu or text selection when a card is pressed and held. */
+.card,
+.card * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.card img {
+  pointer-events: none;
+}
+.card {
+  touch-action: manipulation;
+}

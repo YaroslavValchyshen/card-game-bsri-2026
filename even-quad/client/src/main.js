@@ -58,35 +58,48 @@ function render() {
       toggleCard(card);
     });
 
+    // Long press on touch devices flips the card.
+    let longPressTimer;
+    let longPressTriggered = false;
+
+    const flipFromLongPress = () => {
+      if (longPressTriggered) return;
+      const card = state.deck.find((c) => c.id === element.dataset.id);
+      if (!card) return;
+      longPressTriggered = true;
+      toggleFlip(card.id);
+    };
+
+    // Desktop right-click. Android also fires this on long press, so it
+    // shares the guard with the touch timer to avoid a double flip.
     element.addEventListener('contextmenu', (e) => {
       e.preventDefault();
+      clearTimeout(longPressTimer);
+      if (longPressTriggered) return;
       const card = state.deck.find((c) => c.id === element.dataset.id);
       if (card) toggleFlip(card.id);
     });
 
-    // Long press on touch devices (1.5s)
-    let longPressTimer;
-    let longPressTriggered = false;
+    element.addEventListener(
+      'touchstart',
+      () => {
+        longPressTriggered = false;
+        clearTimeout(longPressTimer);
+        longPressTimer = setTimeout(flipFromLongPress, 600);
+      },
+      { passive: true }
+    );
 
-    element.addEventListener('touchstart', () => {
-      longPressTriggered = false;
-
-      longPressTimer = setTimeout(() => {
-        const card = state.deck.find((c) => c.id === element.dataset.id);
-        if (card) {
-          longPressTriggered = true;
-          toggleFlip(card.id);
-        }
-      }, 1500);
-    });
-
-    element.addEventListener('touchend', () => {
+    element.addEventListener('touchend', (e) => {
       clearTimeout(longPressTimer);
+      // Don't let the release after a long press count as a tap
+      // (which would select the card or open the poster).
+      if (longPressTriggered) e.preventDefault();
     });
 
     element.addEventListener('touchmove', () => {
       clearTimeout(longPressTimer);
-    });
+    }, { passive: true });
 
     element.addEventListener('touchcancel', () => {
       clearTimeout(longPressTimer);
