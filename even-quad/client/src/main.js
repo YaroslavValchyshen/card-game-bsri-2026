@@ -9,6 +9,8 @@ import { renderTopbar } from './render/topbar.js';
 import { renderScoreboard } from './render/scoreboard.js';
 import { renderBoard } from './render/board.js';
 import { renderGameOver } from './render/gameOver.js';
+import { openPoster } from './render/posterViewer.js';
+import { APP_TITLE, AWM_EVENQUADS_URL, APP_CREATOR } from './config.js';
 
 // ─── Render ──────────────────────────────────────────────────────────────────
 
@@ -16,17 +18,37 @@ function render() {
   const app = document.getElementById('app');
 
   app.innerHTML = `
-    <h1>Even Quad</h1>
+    <header class="site-header">
+      <h1>${APP_TITLE}</h1>
+      <a class="awm-link" href="${AWM_EVENQUADS_URL}" target="_blank" rel="noopener">
+        Learn more on the AWM EvenQuads website ↗
+      </a>
+    </header>
     ${renderTopbar()}
+    <p class="instructions">
+      <strong>How to play:</strong> click four cards to select a Quad.
+      <strong>Right-click</strong> a card (or press and hold on a touchscreen) to flip it over
+      and meet the mathematician on the back. Click a flipped card to enlarge the poster.
+    </p>
     ${renderScoreboard()}
     ${renderGameOver()}
     ${renderBoard()}
+    <footer class="site-footer">
+      App created by ${APP_CREATOR} ·
+      Card designs and posters from the
+      <a href="${AWM_EVENQUADS_URL}" target="_blank" rel="noopener">AWM EvenQuads project</a>
+    </footer>
   `;
 
   document.querySelectorAll('.card').forEach((element) => {
     element.addEventListener('click', () => {
       const card = state.deck.find((c) => c.id === element.dataset.id);
-      if (card) toggleCard(card);
+      if (!card) return;
+      if (state.flippedCards.has(card.id)) {
+        openPoster(card.backImage);
+        return;
+      }
+      toggleCard(card);
     });
 
     element.addEventListener('contextmenu', (e) => {

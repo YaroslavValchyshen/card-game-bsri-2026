@@ -31,7 +31,8 @@ export function renderCard(card) {
           </div>
         </div>
         <div class="card-back">
-          <img src="${card.backImage}" class="back-image" draggable="false" />
+          <img src="${card.backImage}" class="back-image" draggable="false" alt="Mathematician poster" />
+          <span class="back-enlarge">🔍 Click to enlarge</span>
           <div class="back-timer">
             <div class="back-timer-bar" style="${isFlipped ? `animation-delay:-${elapsed}s;` : ''}"></div>
           </div>
